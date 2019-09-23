@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 
-const Users = require('');
+const Users = require('../users/users-auth-router.js');
 
 module.exports = (req, res, next) => {
   const { username, password } = req.headers;
