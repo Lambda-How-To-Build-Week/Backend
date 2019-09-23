@@ -33,6 +33,7 @@ async function add(user) {
   return findById(id);
 }
 
+
 async function remove(user) {
   const [id] = await db('users').remove(user);
 
