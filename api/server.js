@@ -1,16 +1,19 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+require('dotenv').config()
 
-//for importing routes
+const authRouter = require('../users/users-auth-router.js');
+const postRouter = require('../users/posts-router.js');
 
 const server = express();
 
 server.use(helmet());
-server.use(cors());
 server.use(express.json());
+server.use(cors());
 
-//for using route
+server.use('/api/users', authRouter);
+server.use('/api/auth', postRouter);
 
 server.get('/', (req, res) => {
     res.status(200).json({ api: 'up' });

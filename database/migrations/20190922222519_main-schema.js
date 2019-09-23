@@ -9,31 +9,31 @@ exports.up = function(knex) {
           .unique();
         users.string('password', 255).notNullable();
       })
-    .createTable('posts', posts => {
-        tbl.increments();
+    // .createTable('posts', posts => {
+    //     tbl.increments();
 
-        posts
+    //     posts
 
-    })
-    .createTable('steps', steps => {
-        tbl.increments();
+    // })
+    // .createTable('steps', steps => {
+    //     tbl.increments();
         
-        steps
+    //     steps
             
-    })
-    .createTable('comments', comments => {
-        tbl.increments();
+    // })
+    // .createTable('comments', comments => {
+    //     tbl.increments();
 
-        comments
+    //     comments
             
-    })
+    // })
 
 };
 
 exports.down = function(knex) {
     return knex.schema
-        .dropTableIfExists('comments')
-        .dropTableIfExists('steps')
-        .dropTableIfExists('posts')
+        // .dropTableIfExists('comments')
+        // .dropTableIfExists('steps')
+        // .dropTableIfExists('posts')
         .dropTableIfExists('users')
 };
