@@ -7,6 +7,7 @@ module.exports = {
   findBy,
   findById,
   remove,
+  findPosts,
 };
 
 function findAll() {
@@ -38,3 +39,10 @@ function remove(id) {
   return db('users').where({ id }).del()
 }
 
+function findPosts(user_post_id) {
+  return db('users as u')
+  .join('posts as p', 'u.id', 'p.user_post_id')
+  .select('u.id','p.title', 'p.tag', 'p.id')
+  .orderBy('p.id')
+  .where({ user_post_id })
+}

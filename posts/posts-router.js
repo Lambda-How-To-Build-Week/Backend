@@ -11,7 +11,7 @@ router.get('/allusers', restricted, (req, res) => {
     .catch(err => res.send(err));
 });
 
-router.get('/:id', restricted, (req, res) => {
+router.get('/:id',(req, res) => {
   const { id } = req.params;
 
   Users.findById(id)
@@ -27,7 +27,7 @@ router.get('/:id', restricted, (req, res) => {
   });
 });
 
-router.delete('/:id', restricted, (req, res) => {
+router.delete('/:id',(req, res) => {
   const { id } = req.params;
 
   Users.remove(id)
@@ -42,4 +42,21 @@ router.delete('/:id', restricted, (req, res) => {
     res.status(500).json({ message: 'Failed to delete User' });
   });
 });
+
+router.get('/:id/posts', (req, res) => {
+  const { id } = req.params;
+
+  Users.findPosts(id)
+  .then(posts => {
+    if (posts.length) {
+      res.json(posts);
+    } else {
+      res.status(404).json({ message: 'Could not find posts for given user' })
+    }
+  })
+  .catch(err => {
+    res.status(500).json({ message: 'Failed to get posts' });
+  });
+});
+
 module.exports = router;
