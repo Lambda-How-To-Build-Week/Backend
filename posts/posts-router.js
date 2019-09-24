@@ -59,4 +59,24 @@ router.get('/:id/posts', (req, res) => {
   });
 });
 
+router.post('/:id/posts', (req, res) => {
+  const postData = req.body;
+  const { id } = req.params; 
+
+  Users.findById(id)
+  .then(user => {
+    if (user) {
+      Users.addPost(postData, id)
+      .then(post => {
+        res.status(201).json(post);
+      })
+    } else {
+      res.status(404).json({ message: 'Could not find post with given id.' })
+    }
+  })
+  .catch (err => {
+    res.status(500).json({ message: 'Failed to create new post' });
+  });
+});
+
 module.exports = router;

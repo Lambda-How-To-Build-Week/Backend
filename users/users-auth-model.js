@@ -8,6 +8,7 @@ module.exports = {
   findById,
   remove,
   findPosts,
+  addPost,
 };
 
 function findAll() {
@@ -45,4 +46,11 @@ function findPosts(user_post_id) {
   .select('u.id','p.title', 'p.tag', 'p.id')
   .orderBy('p.id')
   .where({ user_post_id })
+}
+
+function addPost(post) {
+  return db('posts').insert(post)
+  .then(ids => {
+      return findById(ids[0]);
+  })
 }
