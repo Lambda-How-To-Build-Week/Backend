@@ -4,7 +4,7 @@ const helmet = require('helmet');
 require('dotenv').config()
 
 const authRouter = require('../users/users-auth-router.js');
-const postRouter = require('../users/posts-router.js');
+const postRouter = require('../posts/posts-router.js');
 
 const server = express();
 

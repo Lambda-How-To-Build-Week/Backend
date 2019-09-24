@@ -6,7 +6,7 @@ module.exports = {
   find,
   findBy,
   findById,
-  remove
+  remove,
 };
 
 function findAll() {
@@ -34,8 +34,7 @@ async function add(user) {
 }
 
 
-async function remove(user) {
-  const [id] = await db('users').remove(user);
-
-  return findById(id);
+function remove(id) {
+  return db('users').where({ id }).del()
 }
+

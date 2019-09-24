@@ -30,7 +30,6 @@ router.post('/login', (req, res) => {
     .first()
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
-        //jwt should be generated
         const token = generateToken(user);
         res.status(200).json({
           message: `Welcome ${user.username}!`,
@@ -45,9 +44,8 @@ router.post('/login', (req, res) => {
     });
 });
 
+
 function generateToken(user) {
-  //header, payload and verrify signature
-  // payload => usename, id, roles, exp date
   const payload = {
     sub: user.id,
     usename: user.username
@@ -56,7 +54,6 @@ function generateToken(user) {
   const options = {
     expiresIn: '1d'
   }
-  // verrify signature => a secret
   return jwt.sign(payload, process.env.JWT_SECRET, options)
 }
 
