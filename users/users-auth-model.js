@@ -59,7 +59,7 @@ function findPosts(user_post_id) {
 function findInstructions(user_instruction_id) {
   return db('users as u')
   .join('instructions as in', 'u.id', 'in.user_instruction_id')
-  .select('u.id','in.instruction_name', 'in.intstruction')
+  .select('in.id','in.instruction_name', 'in.intstruction')
   .orderBy('in.id')
   .where({ user_instruction_id })
 }

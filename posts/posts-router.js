@@ -4,7 +4,7 @@ const Users = require('../users/users-auth-model.js');
 const restricted = require('../auth/auth-middleware.js');
 //restricted, 
 
-router.get('/allusers', (req, res) => {
+router.get('/allusers', restricted, (req, res) => {
   Users.findAll()
     .then(users => {
       res.json(users);
@@ -60,6 +60,30 @@ router.get('/:user_id/posts', (req, res) => {
   });
 });
 
+router.get('/:user_id/posts/:post_id/instructions', (req, res) => {
+  const { user_id } = req.params;
+  const { post_id } = req.params;
+
+  Users.findPosts(user_id)
+  .then(posts => {
+    if (posts) {
+      Users.findPostById(post_id)
+      .then(post => {
+          Users.findInstructions(post_id)
+            .then(instructions => {
+              if (instructions) {
+                res.json(instructions);
+              } else {
+                res.status(404).json({ message: 'Could not find posts for given user' })
+              }
+            })
+      })
+    }
+  })
+  .catch(err => {
+    res.status(500).json({ message: 'Failed to get posts' });
+  });
+});
 
 router.get('/:user_id/posts/:post_id', (req, res) => {
   const { user_id } = req.params;
@@ -82,35 +106,6 @@ router.get('/:user_id/posts/:post_id', (req, res) => {
     res.status(500).json({ message: 'Failed to get posts' });
   });
 });
-
-
-// router.get('/:user_id/posts/:post_id/instructions', (req, res) => {
-//   const { user_id } = req.params;
-//   const { post_id } = req.params;
-
-//   Users.findPosts(user_id)
-//   .then(posts => {
-//     if (posts) {
-//       Users.findPostById(post_id)
-//       .then(post => {
-//         if (post) {
-//           Users.findInstructions(user_post_id)
-//             .then(instructions => {
-//                 if(instructions) {
-//                   res.json(instructions);
-//                 } else {
-//                   res.status(404).json({ message: 'Could not find posts for given user' })
-//                 }
-//             })
-//         }
-//       })
-//     }
-//   })
-//   .catch(err => {
-//     res.status(500).json({ message: 'Failed to get posts' });
-//   });
-// });
-
 
 router.post('/:id/posts', (req, res) => {
   const postData = req.body;
