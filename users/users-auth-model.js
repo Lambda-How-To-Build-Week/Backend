@@ -10,16 +10,26 @@ module.exports = {
   findPostById,
   removeUser,
   removePost,
+  updatePost,
   removeInstruction,
   findPosts,
   addPost,
   findInstructions,
   findInstructionById,
+  // updateInstruction,
   findCommentById,
   addInstruction,
   findComments,
   addComment
 };
+
+function updatePost(id, changes) {
+  return db('posts').where({ id }).update(changes)
+  .then(count => {
+      return findById(id)
+  })
+}
+
 
 function findAllUsers() {
   return db('users');

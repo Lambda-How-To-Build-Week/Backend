@@ -201,9 +201,10 @@ router.get('/:user_id/posts/:post_id', (req, res) => {
   });
 });
 
-router.delete('/:user_id/posts/:post_id', (req, res) => {
+router.put('/:user_id/posts/:post_id', (req, res) => {
   const { user_id } = req.params;
   const { post_id } = req.params;
+  const changes = req.body;
 
   Users.findPosts(user_id)
   .then(posts => {
@@ -211,10 +212,10 @@ router.delete('/:user_id/posts/:post_id', (req, res) => {
       Users.findPostById(post_id)
       .then(post => {
         if (post) {
-          Users.removePost(post_id)
-            .then(deleted => {
-              if (deleted) {
-                res.json({ removed: deleted });
+          Users.updatePost(post_id, changes)
+            .then(post => {
+              if (post) {
+                res.json({ updated: post });
               } else {
                 res.status(404).json({ message: 'Could not find posts for given user' })
               }
@@ -227,6 +228,8 @@ router.delete('/:user_id/posts/:post_id', (req, res) => {
     res.status(500).json({ message: 'Failed to get posts' });
   });
 });
+
+
 
 router.post('/:id/posts', (req, res) => {
   const postData = req.body;
@@ -247,6 +250,8 @@ router.post('/:id/posts', (req, res) => {
     res.status(500).json({ message: 'Failed to create new post' });
   });
 });
+
+
 
 router.post('/:user_id/posts/:post_id/comments', (req, res) => {
   const  commentData  = req.body;
