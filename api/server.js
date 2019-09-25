@@ -6,10 +6,6 @@ require('dotenv').config()
 const authRouter = require('../users/users-auth-router.js');
 const postRouter = require('../posts/posts-router.js');
 
-if (process.env.NODE_ENV === 'production') {
-	app.use(express.static('client/build'));
-}
-
 const server = express();
 
 server.use(helmet());
