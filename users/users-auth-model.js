@@ -38,7 +38,7 @@ function removePost(id) {
 }
 
 function removeInstruction(id) {
-  return db('instruction').where({ id }).del()
+  return db('instructions').where({ id }).del()
 }
 
 

@@ -93,6 +93,67 @@ router.get('/:user_id/posts/:post_id/instructions', (req, res) => {
   });
 });
 
+router.get('/:user_id/posts/:post_id/instructions/:instruction_id', (req, res) => {
+  const { user_id } = req.params;
+  const { post_id } = req.params;
+  const { instruction_id } = req.params;
+
+  Users.findPosts(user_id)
+  .then(posts => {
+    if (posts) {
+      Users.findPostById(post_id)
+      .then(post => {
+          Users.findInstructions(post_id)
+            .then(instructions => {
+              Users.findInstructionById(instruction_id)
+                .then(instruction => {
+                  if (instruction) {
+                    res.json(instruction);
+                  } else {
+                    res.status(404).json({ message: 'Could not find instruction for given id' })
+                  }
+                })
+            })
+      })
+    }
+  })
+  .catch(err => {
+    res.status(500).json({ message: 'Failed to get posts' });
+  });
+});
+
+router.delete('/:user_id/posts/:post_id/instructions/:instruction_id', (req, res) => {
+  const { user_id } = req.params;
+  const { post_id } = req.params;
+  const { instruction_id } = req.params;
+
+  Users.findPosts(user_id)
+  .then(posts => {
+    if (posts) {
+      Users.findPostById(post_id)
+      .then(post => {
+          Users.findInstructions(post_id)
+            .then(instructions => {
+              Users.findInstructionById(instruction_id)
+                .then(instruction => {
+                  Users.removeInstruction(instruction_id)
+                  .then(deleted => {
+                    if (deleted) {
+                      res.json({ removed: deleted });
+                    } else {
+                      res.status(404).json({ message: 'Could not find posts for given user' })
+                    }
+                  })
+                })
+            })
+      })
+    }
+  })
+  .catch(err => {
+    res.status(500).json({ message: 'Failed to get instruction' });
+  });
+});
+
 router.get('/:user_id/posts/:post_id/comments', (req, res) => {
   const { user_id } = req.params;
   const { post_id } = req.params;
@@ -235,6 +296,8 @@ router.post('/:user_id/posts/:post_id/instructions', (req, res) => {
     res.status(500).json({ message: 'Failed to post instruction' });
   });
 });
+
+
 
 
 
