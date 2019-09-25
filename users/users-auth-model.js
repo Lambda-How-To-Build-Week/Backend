@@ -16,7 +16,7 @@ module.exports = {
   addPost,
   findInstructions,
   findInstructionById,
-  // updateInstruction,
+  updateInstruction,
   findCommentById,
   addInstruction,
   findComments,
@@ -30,6 +30,12 @@ function updatePost(id, changes) {
   })
 }
 
+function updateInstruction(id, changes) {
+  return db('instructions').where({ id }).update(changes)
+  .then(count => {
+      return findById(id)
+  })
+}
 
 function findAllUsers() {
   return db('users');
