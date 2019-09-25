@@ -140,6 +140,33 @@ router.get('/:user_id/posts/:post_id', (req, res) => {
   });
 });
 
+router.delete('/:user_id/posts/:post_id', (req, res) => {
+  const { user_id } = req.params;
+  const { post_id } = req.params;
+
+  Users.findPosts(user_id)
+  .then(posts => {
+    if (posts) {
+      Users.findPostById(post_id)
+      .then(post => {
+        if (post) {
+          Users.removePost(post_id)
+            .then(deleted => {
+              if (deleted) {
+                res.json({ removed: deleted });
+              } else {
+                res.status(404).json({ message: 'Could not find posts for given user' })
+              }
+            })
+        }
+      })
+    }
+  })
+  .catch(err => {
+    res.status(500).json({ message: 'Failed to get posts' });
+  });
+});
+
 router.post('/:id/posts', (req, res) => {
   const postData = req.body;
   const { id } = req.params; 
