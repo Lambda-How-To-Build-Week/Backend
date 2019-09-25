@@ -8,6 +8,14 @@ const postRouter = require('../posts/posts-router.js');
 
 const server = express();
 
+if (process.env.NODE_ENV === 'production') {
+	app.use(express.static('client/build'));
+}
+
+server.get('*', (request, response) => {
+	response.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+});
+
 server.use(helmet());
 server.use(express.json());
 server.use(cors());
