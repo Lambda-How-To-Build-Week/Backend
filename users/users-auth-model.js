@@ -11,6 +11,11 @@ module.exports = {
   findPosts,
   addPost,
   findInstructions,
+  findInstructionById,
+  findCommentById,
+  addInstruction,
+  findComments,
+  addComment
 };
 
 function findAll() {
@@ -31,6 +36,24 @@ function findById(id) {
       .first();
 }
 
+function findPostById(id) {
+  return db('posts')
+    .where({ id })
+    .first();
+}
+
+function findInstructionById(id) {
+  return db('instructions')
+    .where({ id })
+    .first();
+}
+
+function findCommentById(id) {
+  return db('comments')
+    .where({ id })
+    .first();
+}
+
 async function add(user) {
   const [id] = await db('users').insert(user);
 
@@ -42,11 +65,6 @@ function remove(id) {
   return db('users').where({ id }).del()
 }
 
-function findPostById(id) {
-  return db('posts')
-    .where({ id })
-    .first();
-}
 
 function findPosts(user_post_id) {
   return db('users as u')
@@ -64,9 +82,37 @@ function findInstructions(user_instruction_id) {
   .where({ user_instruction_id })
 }
 
+function findComments(user_post_id) {
+  return db('users as u')
+  .join('comments as c', 'u.id', 'c.user_post_id')
+  .select('c.id','c.comment')
+  .orderBy('c.id')
+  .where({ user_post_id })
+}
+
 function addPost(post) {
   return db('posts').insert(post)
   .then(ids => {
       return findById(ids[0]);
   })
 }
+
+function addInstruction(instruction) {
+  return db('instructions').insert(instruction)
+  .then(ids => {
+      return findInstructionById(ids[0]);
+  })
+}
+
+function addComment(comment) {
+  return db('comments').insert(comment)
+  .then(ids => {
+      return findCommentById(ids[0]);
+  })
+}
+
+// async function addComment(comment) {
+//   const [id] = await db('comments').insert(comment);
+
+//   return findCommentById(id);
+// }
