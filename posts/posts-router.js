@@ -2,10 +2,17 @@ const router = require('express').Router();
 
 const Users = require('../users/users-auth-model.js');
 const restricted = require('../auth/auth-middleware.js');
-//restricted, 
 
 router.get('/allusers', restricted, (req, res) => {
-  Users.findAll()
+  Users.findAllUsers()
+    .then(users => {
+      res.json(users);
+    })
+    .catch(err => res.send(err));
+});
+
+router.get('/posts', (req, res) => {
+  Users.findAllPosts()
     .then(users => {
       res.json(users);
     })
@@ -31,7 +38,7 @@ router.get('/:id',(req, res) => {
 router.delete('/:id',(req, res) => {
   const { id } = req.params;
 
-  Users.remove(id)
+  Users.removeUser(id)
   .then(deleted => {
     if (deleted) {
       res.json({ removed: deleted });
@@ -59,6 +66,7 @@ router.get('/:user_id/posts', (req, res) => {
     res.status(500).json({ message: 'Failed to get posts' });
   });
 });
+
 
 router.get('/:user_id/posts/:post_id/instructions', (req, res) => {
   const { user_id } = req.params;

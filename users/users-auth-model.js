@@ -1,13 +1,16 @@
 const db = require('../database/dbConfig.js');
 
 module.exports = {
-  findAll,
+  findAllUsers,
+  findAllPosts,
   add,
   find,
   findBy,
   findById,
   findPostById,
-  remove,
+  removeUser,
+  removePost,
+  removeInstruction,
   findPosts,
   addPost,
   findInstructions,
@@ -18,9 +21,26 @@ module.exports = {
   addComment
 };
 
-function findAll() {
+function findAllUsers() {
   return db('users');
 }
+
+function findAllPosts() {
+  return db('posts');
+}
+
+function removeUser(id) {
+  return db('users').where({ id }).del()
+}
+
+function removePost(id) {
+  return db('posts').where({ id }).del()
+}
+
+function removeInstruction(id) {
+  return db('instruction').where({ id }).del()
+}
+
 
 function find() {
   return db('users').select('id', 'username', 'password');
@@ -59,12 +79,6 @@ async function add(user) {
 
   return findById(id);
 }
-
-
-function remove(id) {
-  return db('users').where({ id }).del()
-}
-
 
 function findPosts(user_post_id) {
   return db('users as u')
@@ -111,8 +125,3 @@ function addComment(comment) {
   })
 }
 
-// async function addComment(comment) {
-//   const [id] = await db('comments').insert(comment);
-
-//   return findCommentById(id);
-// }
