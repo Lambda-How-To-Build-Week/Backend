@@ -176,17 +176,18 @@ router.post('/:user_id/posts/:post_id/comments', (req, res) => {
   });
 });
 
-router.post('/:user_id/posts/:post_id/instructions', (req, res) => {
-  const  instructionData = req.body;
-  const { user_post_comment_id } = req.params;
-  const { user_post_id } = req.params;
 
-  Users.findPosts(user_post_comment_id)
+router.post('/:user_id/posts/:post_id/instructions', (req, res) => {
+  const instructionData  = req.body;
+  const { user_id } = req.params;
+  const { post_id } = req.params;
+
+  Users.findPosts(user_id)
   .then(posts => {
     if (posts) {
-      Users.findPostById(user_post_id)
+      Users.findPostById(post_id)
       .then(post => {
-          Users.addInstruction(instructionData, user_post_id)
+          Users.addInstruction(instructionData,post_id)
             .then(instruction => {
               res.status(201).json(post);
             })  
@@ -199,6 +200,7 @@ router.post('/:user_id/posts/:post_id/instructions', (req, res) => {
     res.status(500).json({ message: 'Failed to post instruction' });
   });
 });
+
 
 
 module.exports = router;
