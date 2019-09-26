@@ -4,6 +4,8 @@ const Users = require('../users/users-auth-model.js');
 const restricted = require('../auth/auth-middleware.js');
 
 router.get('/allusers', restricted, (req, res) => {
+  console.log(req.decodedToken.sub);
+  
   Users.findAllUsers()
     .then(users => {
       res.json(users);
@@ -11,7 +13,7 @@ router.get('/allusers', restricted, (req, res) => {
     .catch(err => res.send(err));
 });
 
-router.get('/posts', (req, res) => {
+router.get('/posts', restricted, (req, res) => {
   Users.findAllPosts()
     .then(users => {
       res.json(users);
@@ -19,7 +21,7 @@ router.get('/posts', (req, res) => {
     .catch(err => res.send(err));
 });
 
-router.get('/:id',(req, res) => {
+router.get('/:id',restricted,(req, res) => {
   const { id } = req.params;
   Users.findById(id)
   .then(user => {
@@ -35,8 +37,8 @@ router.get('/:id',(req, res) => {
 });
 
 
-router.delete('/:id',(req, res) => {
-  const { id } = req.params;
+router.delete('/:id',restricted,(req, res) => {
+  const user_id  = req.decodedToken.sub; 
 
   Users.removeUser(id)
   .then(deleted => {
@@ -51,9 +53,9 @@ router.delete('/:id',(req, res) => {
   });
 });
 
-router.get('/:user_id/posts', (req, res) => {
-  const { user_id } = req.params;
-  
+router.get('/:user_id/posts', restricted, (req, res) => {
+  const user_id = req.decodedToken.sub;
+
   Users.findPosts(user_id)
   .then(posts => {
     if (posts) {
@@ -68,8 +70,8 @@ router.get('/:user_id/posts', (req, res) => {
 });
 
 
-router.get('/:user_id/posts/:post_id/instructions', (req, res) => {
-  const { user_id } = req.params;
+router.get('/:user_id/posts/:post_id/instructions', restricted, (req, res) => {
+  const user_id  = req.decodedToken.sub; 
   const { post_id } = req.params;
 
   Users.findPosts(user_id)
@@ -93,8 +95,8 @@ router.get('/:user_id/posts/:post_id/instructions', (req, res) => {
   });
 });
 
-router.get('/:user_id/posts/:post_id/instructions/:instruction_id', (req, res) => {
-  const { user_id } = req.params;
+router.get('/:user_id/posts/:post_id/instructions/:instruction_id', restricted, (req, res) => {
+  const user_id  = req.decodedToken.sub; 
   const { post_id } = req.params;
   const { instruction_id } = req.params;
 
@@ -122,8 +124,8 @@ router.get('/:user_id/posts/:post_id/instructions/:instruction_id', (req, res) =
   });
 });
 
-router.delete('/:user_id/posts/:post_id/instructions/:instruction_id', (req, res) => {
-  const { user_id } = req.params;
+router.delete('/:user_id/posts/:post_id/instructions/:instruction_id', restricted, (req, res) => {
+  const user_id  = req.decodedToken.sub; 
   const { post_id } = req.params;
   const { instruction_id } = req.params;
 
@@ -154,8 +156,8 @@ router.delete('/:user_id/posts/:post_id/instructions/:instruction_id', (req, res
   });
 });
 
-router.get('/:user_id/posts/:post_id/comments', (req, res) => {
-  const { user_id } = req.params;
+router.get('/:user_id/posts/:post_id/comments', restricted,(req, res) => {
+  const user_id  = req.decodedToken.sub; 
   const { post_id } = req.params;
 
   Users.findPosts(user_id)
@@ -179,9 +181,9 @@ router.get('/:user_id/posts/:post_id/comments', (req, res) => {
   });
 });
 
-router.get('/:user_id/posts/:post_id', (req, res) => {
-  const { user_id } = req.params;
+router.get('/:user_id/posts/:post_id', restricted, (req, res) => {
   const { post_id } = req.params;
+  const user_id  = req.decodedToken.sub; 
 
   Users.findPosts(user_id)
   .then(posts => {
@@ -201,8 +203,8 @@ router.get('/:user_id/posts/:post_id', (req, res) => {
   });
 });
 
-router.put('/:user_id/posts/:post_id', (req, res) => {
-  const { user_id } = req.params;
+router.put('/:user_id/posts/:post_id', restricted,(req, res) => {
+  const user_id  = req.decodedToken.sub; 
   const { post_id } = req.params;
   const changes = req.body;
 
@@ -231,9 +233,9 @@ router.put('/:user_id/posts/:post_id', (req, res) => {
 
 
 
-router.post('/:id/posts', (req, res) => {
+router.post('/posts', restricted, (req, res) => {
   const postData = req.body;
-  const { id } = req.params; 
+  const id  = req.decodedToken.sub; 
 
   Users.findById(id)
   .then(user => {
@@ -253,9 +255,9 @@ router.post('/:id/posts', (req, res) => {
 
 
 
-router.post('/:user_id/posts/:post_id/comments', (req, res) => {
+router.post('/:user_id/posts/:post_id/comments', restricted, (req, res) => {
   const  commentData  = req.body;
-  const { user_id } = req.params;
+  const user_id  = req.decodedToken.sub; 
   const { post_id } = req.params;
 
   Users.findPosts(user_id)
@@ -278,9 +280,9 @@ router.post('/:user_id/posts/:post_id/comments', (req, res) => {
 });
 
 
-router.post('/:user_id/posts/:post_id/instructions', (req, res) => {
+router.post('/:user_id/posts/:post_id/instructions', restricted, (req, res) => {
   const instructionData  = req.body;
-  const { user_id } = req.params;
+  const user_id  = req.decodedToken.sub; 
   const { post_id } = req.params;
 
   Users.findPosts(user_id)
@@ -302,8 +304,8 @@ router.post('/:user_id/posts/:post_id/instructions', (req, res) => {
   });
 }); 
 
-router.put('/:user_id/posts/:post_id/instructions/:instruction_id', (req, res) => {
-  const { user_id } = req.params;
+router.put('/:user_id/posts/:post_id/instructions/:instruction_id', restricted, (req, res) => {
+  const user_id  = req.decodedToken.sub; 
   const { post_id } = req.params;
   const { instruction_id } = req.params;
   const changes = req.body;
